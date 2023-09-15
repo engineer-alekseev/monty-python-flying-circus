@@ -311,10 +311,10 @@ nav select{
 	font-size: 18px;
 	line-height: 40px;
 	color: #3b4465;
-  background: #eef9fe;
+  	background: #eef9fe;
 	box-shadow: 0 0 40px rgba(8,7,16,0.6);
-  border: 1px solid #cddbef;
-  border-radius: 2px;
+  	border: 1px solid #cddbef;
+  	border-radius: 2px;
 }
 
 nav option{
@@ -323,38 +323,3 @@ nav option{
 }
 
 
-
-
-
-.brush-wrap {
-  position: relative;
-  display: inline-block;
-  padding: 3rem;
-}
-
-/* applying example animation (indefinite variant) */
-.brush-wrap.brush-wrap--indefinite:before {
-  clip-path: url(#clip-indefinite);
-}
-
-/* clipping/animating object (pseudo element) */
-.brush-wrap:before {
-  content: '';
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-  background: black;
-  z-index: -1;
-  clip-path: url(#clip); /* applying clip animation */
-}
-
-.brush-wrap p {
-  font-size: 2rem;
-  text-transform: uppercase;
-  margin: 0;
-  color: white;
-  font-style: italic;
-  filter: drop-shadow(0px 0px 2px black);
-}

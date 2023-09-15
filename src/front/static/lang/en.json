@@ -1,12 +1,19 @@
 {
-  "eng": "English",
-  "rus": "Russian",
+  "eng": "En",
+  "rus": "Ru",
   "hello":"Hello",
   "login":"Login",
   "passwd":"Password",
   "passwd_conf":"Confirm Password",
   "login_submit": "Login",
   "sign_up":"Sign up",
-  "continue":"Continue"
-  
+  "continue":"Continue",
+  "drop_zone":"Drag file HERE",
+  "search": "Search",
+  "settings": "Settings",
+  "add_gif": "Add Gif",
+  "create_gif": "Create Gif",
+  "random": "Random Gif",
+  "tape": "Tape",
+  "private": "Home sweet home"
 }

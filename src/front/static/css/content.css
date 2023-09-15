@@ -1,0 +1,131 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: "Lato", sans-serif;
+    line-height: 1;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+background-color: #f5f6f8;
+overflow: hidden;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    list-style: none;
+    background: #3b4465;
+}
+
+div {
+    width: 50%;
+    height: 50%;
+    float: left;
+}
+img{
+    height: 100%;
+    object-position:center;
+    object-fit: fill;
+}
+
+div:nth-of-type(1) {
+    border-left: 1px solid #ffffffff;
+    /* background: #ccc; */
+}
+
+div:nth-of-type(2) {
+    /* background: #bbb; */
+    border-left: 1px solid #ffffffff;
+}
+
+div:nth-of-type(3) {
+    /* background: #aaa; */
+    border-top: 1px solid #ffffffff;
+}
+
+div:nth-of-type(4) {
+    /* background: #ddd; */
+    border-top: 1px solid #ffffffff;
+    border-left: 1px solid #ffffffff;
+}
+
+.container{
+    position: fixed;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 90vw;
+    height: 90vh;
+    left: 80px;
+    border-radius:  10px;
+    z-index: 1;
+}
+
+.animateForward {
+	animation: effectLayerMoveLeft .5s ease-in forwards;
+}
+
+@keyframes effectLayerMoveLeft {
+    0% {
+        transform: translateX(-20vw) scale(1);
+	}
+    50% {
+        transform: translateX(0) scale(1.5);
+	}
+	100% {
+        transform: translateX(45vw) scale(1);
+	}
+}
+
+.animateBack {
+	animation: effectLayerMoveRight .3s ease-in forwards;
+}
+
+@keyframes effectLayerMoveRight {
+    0% {
+        transform: translateX(5vw);
+	}
+    50% {
+        transform: translateX(0) scale(0.5);
+	}
+	100% {
+        transform: translateX(-45vw);
+	}
+}
+
+.container #right-top .animateTop {
+	animation: effectLayerMoveTop .3s ease-in forwards;
+}
+
+@keyframes effectLayerMoveTop {
+    0% {
+        transform: translateY(-45vw);
+	}
+    50% {
+        transform: translateX(0);
+	}
+	100% {
+        transform: translateX(5vw);
+	}
+}
+
+.container #right-top .animateBottom {
+	animation: effectLayerMoveBottom .3s ease-in forwards;
+}
+
+@keyframes effectLayerMoveBottom {
+    0% {
+        transform: translateY(-45vw);
+	}
+    50% {
+        transform: translateX(0);
+	}
+	100% {
+        transform: translateX(5vw);
+	}
+}

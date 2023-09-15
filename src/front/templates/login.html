@@ -1,7 +1,8 @@
 <html lang="en">
   <head>
-
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <meta name="google-signin-client_id" content="[Your Client ID]">
+    <!-- <script src="https://accounts.google.com/gsi/client" async defer></script> -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
   </head>
   <body>
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
@@ -43,12 +44,13 @@
         </fieldset>
         <button type="submit" class="btn-login" lang-key="login_submit">Login</button>
         <!-- google-->
-        <div type="submit" >
+        <!-- data-client_id="YOUR_GOOGLE_CLIENT_ID"
+         data-login_uri="https://your.domain/your_login_endpoint" -->
+        <!-- <div type="submit" >
         <div id="g_id_onload"
-         data-client_id="YOUR_GOOGLE_CLIENT_ID"
-         data-login_uri="https://your.domain/your_login_endpoint"
+         
          data-auto_prompt="false">
-        </div>
+        </div>https://accounts.google.com/AccountChooser/signinchooser?hl=en_US&theme=glif&flowName=GlifWebSignIn&flowEntry=AccountChooser
         <div class="g_id_signin"
           data-type="standard"
           data-size="large"
@@ -57,7 +59,9 @@
           data-shape="rectangular"
           data-logo_alignment="left">
         </div>
-      </div>
+      </div> -->
+      <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        
         <!-- google-->
       </form>
     </div>
@@ -93,5 +97,70 @@
 
     <script src="{{ url_for('static', path='/js/localizate.js') }}" rel="stylesheet"></script>
 <script src="{{ url_for('static', path='/js/login.js') }}" rel="stylesheet"></script>
+<script>
+//   function onSignIn(googleUser) {
+//   // получить токен авторизации
+//   var id_token = googleUser.getAuthResponse().id_token;
+//   // отправить токен на сервер для проверки
+//   // проверить идентификатор клиента пользователя и подтвердить токен
+//   // создать сессию для пользователя
+// }
+
+</script>
+<script type="text/javascript">
+  function onSignIn(googleUser)
+  {
+    var myParams = {
+      'clientid' : 'YOUR_CLIENT_ID.apps.googleusercontent.com',
+      'cookiepolicy' : 'single_host_origin',
+      'callback' : 'loginCallback',
+      'approvalprompt':'force',
+      'scope' : 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.profile.emails.read'
+    };
+    gapi.auth.signIn(myParams);
+  }
+
+  function loginCallback(result)
+  {
+      if(result['status']['signed_in'])
+      {
+          var request = gapi.client.plus.people.get(
+          {
+              'userId': 'me'
+          });
+          request.execute(function (resp)
+          {
+              /* console.log(resp);
+              console.log(resp['id']); */
+              var email = '';
+              if(resp['emails'])
+              {
+                  for(i = 0; i < resp['emails'].length; i++)
+                  {
+                      if(resp['emails'][i]['type'] == 'account')
+                      {
+                          email = resp['emails'][i]['value'];//here is required email id
+                      }
+                  }
+              }
+             var usersname = resp['displayName'];//required name
+          });
+      }
+  }
+  function onLoadCallback()
+  {
+      gapi.client.setApiKey('YOUR_API_KEY');
+      gapi.client.load('plus', 'v1',function(){});
+  }
+
+      </script>
+
+  <script type="text/javascript">
+        (function() {
+         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+         po.src = 'https://apis.google.com/js/client.js?onload=onLoadCallback';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+       })();
+  </script>
 </body>
 </html>

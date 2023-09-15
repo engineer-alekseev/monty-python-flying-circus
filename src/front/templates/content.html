@@ -1,0 +1,161 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+<link href="{{ url_for('static', path='/css/sidebar.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', path='/css/content.css') }}" rel="stylesheet">
+<!-- <link href="{{ url_for('static', path='/css/drop.css') }}" rel="stylesheet"> -->
+
+
+<nav class="sidebar-navigation">
+    <ul>
+        <li class="menu">
+            <select id="localization-switcher" class="locale-switcher">
+                <option value="ru" lang-key="rus"></option>
+                <option value="en" lang-key="eng"></option>
+              </select>
+        </li>
+    </ul>
+	<ul>
+		<li id="find_gif" class="menu active">
+			<i class="fa-solid fa-magnifying-glass"></i>
+			<span class="tooltip" lang-key="search"></span>
+		</li>
+        <li id="tape_gif" class="menu">
+			<i class="fa fa-camera-retro"></i>
+			<span class="tooltip" lang-key="tape"></span>
+		</li>
+        <li id="private_gif" class="menu">
+			<i class="fa fa-user-secret"></i>
+			<span class="tooltip" lang-key="private"></span>
+		</li>
+        <li id="random_gif" class="menu">
+			<i class="fa fa-blind"></i>
+			<span class="tooltip" lang-key="random"></span>
+		</li>
+        <li id="add_gif" class="menu">
+			<i class="fa fa-share"></i>
+			<span class="tooltip" lang-key="add_gif"></span>
+		</li>
+		<li id="create_gif" class="menu">
+			<i class="fa fa-file-video"></i>
+			<span class="tooltip" lang-key="create_gif"></span>
+		</li>
+		
+		<li id="settings_user" class="menu">
+			<i class="fa fa-cogs"></i>
+			<span class="tooltip" lang-key="settings"></span>
+		</li>
+	</ul>
+</nav>
+
+<div id="tape" class="container">
+    <div id="left-top"><img class="active-image left-top" src="static/images/cat1.gif"></div>
+    <div id="right-top"><img class="active-image right-top" src="static/images/cat2.gif"></div>
+    <div id="left-bottom"><img class="active-image left-bottom" src="static/images/cat3.gif"></div>
+    <div id="right-bottom"><img class="active-image right-bottom" src="static/images/cat4.gif"></div>
+</div>
+
+
+<script id="script_local" src="{{ url_for('static', path='/js/localizate.js') }}" rel="stylesheet"></script>
+
+
+<script>
+    const add_gif_field = document.querySelector('#add_gif')
+    
+    add_gif_field.addEventListener('click', function() {
+        document.querySelector('#tape').remove();
+        
+        let link = document.createElement("link");
+        link.href="{{ url_for('static', path='/css/drop.css') }}";
+        link.rel="stylesheet";
+        document.body.appendChild(link);
+        
+        let container_drop = document.createElement("div");
+        container_drop.classList.add('container-drop')
+        document.body.appendChild(container_drop);
+
+        let drop_text = document.createElement("div");
+        drop_text.classList.add('drop-text');
+        container_drop.appendChild(drop_text);
+
+        let h_text = document.createElement("h1");
+        h_text.setAttribute("lang-key", "drop_zone");
+        drop_text.appendChild(h_text)
+
+        let drop_zone = document.createElement("div");
+        drop_zone.classList.add('add-file');
+        drop_zone.id='drop_zone';
+        drop_zone.setAttribute("ondrop", "dropHandler(event)");
+        drop_zone.setAttribute("ondragover", "dragOverHandler(event)");
+        container_drop.appendChild(drop_zone);
+
+        let canv = document.createElement("canvas");
+        canv.id="noisy-canvas";
+        drop_zone.appendChild(canv);
+        
+        let script_noise = document.createElement("script");
+        script_noise.src = "{{ url_for('static', path='/js/noise.js') }}";
+        script_noise.defer = true;
+        document.body.appendChild(script_noise);
+
+        let script_drop = document.createElement("script");
+        script_drop.src = "{{ url_for('static', path='/js/drop.js') }}";
+        script_drop.defer = true;
+        document.body.appendChild(script_drop);
+
+        let selectElement = document.querySelector('#localization-switcher')
+        const event = new Event('change');
+        selectElement.dispatchEvent(event);
+
+});
+
+const menu_switchers = [...document.querySelectorAll('.menu')]
+menu_switchers.forEach(item => {
+    item.addEventListener('click', function() {        
+        menu_switchers.forEach(item => item.classList.remove('active'))
+		this.classList.add('active')
+	})
+});
+
+const switchers = [...document.querySelectorAll('.active-image')]
+
+switchers.forEach(item => {
+	item.addEventListener('mousedown', function() {
+        let choise = Math.floor(Math.random()*3)+1;
+
+        if (item.classList[1] == 'left-top'){
+            let a = document.querySelector('.right-top');
+            a.classList.add('animateBack');
+            item.classList.add('animateForward');
+        } else if (item.classList[1] == 'right-top'){
+            let a = document.querySelector('.left-top');
+            a.classList.add('animateForward');
+            item.classList.add('animateBack');
+        // } else if (item.classList[1] == 'left-top' && choise == 3) {
+        //     let a = document.querySelector('.left-bottom');
+        //     a.classList.add('animateTop');
+        //     this.classList.add('animateBottom');
+        // }  else if (item.classList[1] == 'left-top' && choise == 4) {
+        //     let a = document.querySelector('.left-bottom');
+        //     a.classList.add('animateForwardBottom');
+        //     this.classList.add('animateBackTop');
+        }
+        // alert(a.classList)
+        
+        // alert(this.classList)
+        
+        // this.classList.remove('animate')
+        // alert(this.parentElement.id);
+        // here we know image position
+        // need ajax to get new images
+		// switchers.forEach(item => item.parentElement.classList.remove('is-active'))
+		// this.parentElement.classList.add('is-active')
+        // sleep(10)
+        // switchers.forEach(item => item.classList.remove('animateBack'))
+        // switchers.forEach(item => item.classList.remove('animateForward'))
+	})
+    item.addEventListener("mouseup", (event) => {
+        switchers.forEach(item => item.src = `static/images/cat${Math.floor(Math.random()*7)+1}.gif`);
+        switchers.forEach(item => item.classList.remove('animateBack'))
+        switchers.forEach(item => item.classList.remove('animateForward'))
+    });
+})
+</script>
