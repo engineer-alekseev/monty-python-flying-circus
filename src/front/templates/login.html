@@ -1,0 +1,97 @@
+<html lang="en">
+  <head>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+
+    <nav class="navbar">
+          <div class="navbar-right">
+              <select id="localization-switcher" class="locale-switcher">
+                <option value="ru" lang-key="rus"></option>
+                <option value="en" lang-key="eng"></option>
+              </select>
+          </div>
+  </nav>
+
+      <link href="{{ url_for('static', path='/css/login.css') }}" rel="stylesheet">
+      
+      <!-- <script src="{{ url_for('static', path='/js/localizate.js') }}" rel="stylesheet"></script> -->
+    <!-- <link rel="stylesheet" type="text/css" href="login.css" media="screen" /> -->
+  <!-- <script src="login.js" async defer></script> -->
+<section class="forms-section">
+  <h1 class="section-title" lang-key="hello">Hello</h1>
+  <div class="forms">
+    <div class="form-wrapper is-active">
+      <button type="button" class="switcher switcher-login" lang-key="login">
+        Login
+        <span class="underline"></span>
+      </button>
+      <form class="form form-login">
+        <fieldset>
+          <legend>Please, enter your email and password for login.</legend>
+          <div class="input-block">
+            <label for="login" lang-key="login">Login</label>
+            <input id="login" type="login" required>
+          </div>
+          <div class="input-block">
+            <label for="login-password" lang-key="passwd">Password</label>
+            <input id="login-password" type="password" required>
+          </div>
+        </fieldset>
+        <button type="submit" class="btn-login" lang-key="login_submit">Login</button>
+        <!-- google-->
+        <div type="submit" >
+        <div id="g_id_onload"
+         data-client_id="YOUR_GOOGLE_CLIENT_ID"
+         data-login_uri="https://your.domain/your_login_endpoint"
+         data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin"
+          data-type="standard"
+          data-size="large"
+          data-theme="outline"
+          data-text="sign_in_with"
+          data-shape="rectangular"
+          data-logo_alignment="left">
+        </div>
+      </div>
+        <!-- google-->
+      </form>
+    </div>
+    <div class="form-wrapper">
+      <button type="button" class="switcher switcher-signup" lang-key="sign_up">
+        <span class="underline"></span>
+      </button>
+      <form class="form form-signup">
+        <fieldset>
+          <legend>Please, enter your email, password and password confirmation for sign up.</legend>
+          <div class="input-block">
+            <label for="signup-login" lang-key="login">Login</label>
+            <input id="signup-login" type="login" required>
+          </div>
+          <div class="input-block">
+            <label for="signup-password" lang-key="passwd">Password</label>
+            <input id="signup-password" type="password" required>
+          </div>
+          <div class="input-block">
+            <label for="signup-password-confirm" lang-key="passwd_conf">Confirm password</label>
+            <input id="signup-password-confirm" type="password" required>
+          </div>
+        </fieldset>
+        <button type="submit" class="btn-signup" lang-key="continue">Continue</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+    <script src="{{ url_for('static', path='/js/localizate.js') }}" rel="stylesheet"></script>
+<script src="{{ url_for('static', path='/js/login.js') }}" rel="stylesheet"></script>
+</body>
+</html>

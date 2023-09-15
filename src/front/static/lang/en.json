@@ -1,0 +1,12 @@
+{
+  "eng": "English",
+  "rus": "Russian",
+  "hello":"Hello",
+  "login":"Login",
+  "passwd":"Password",
+  "passwd_conf":"Confirm Password",
+  "login_submit": "Login",
+  "sign_up":"Sign up",
+  "continue":"Continue"
+  
+}
