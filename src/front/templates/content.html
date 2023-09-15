@@ -1,9 +1,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <link href="{{ url_for('static', path='/css/sidebar.css') }}" rel="stylesheet">
 <link href="{{ url_for('static', path='/css/content.css') }}" rel="stylesheet">
 <!-- <link href="{{ url_for('static', path='/css/drop.css') }}" rel="stylesheet"> -->
 
-
+<div style="position: fixed;">
 <nav class="sidebar-navigation">
     <ul>
         <li class="menu">
@@ -15,7 +16,7 @@
     </ul>
 	<ul>
 		<li id="find_gif" class="menu active">
-			<i class="fa-solid fa-magnifying-glass"></i>
+			<i class="fa fa-magnifying-glass"></i>
 			<span class="tooltip" lang-key="search"></span>
 		</li>
         <li id="tape_gif" class="menu">
@@ -43,32 +44,43 @@
 			<i class="fa fa-cogs"></i>
 			<span class="tooltip" lang-key="settings"></span>
 		</li>
+        <li id="" class="">
+            <div class="set-size charts-container">
+            <div class="pie-wrapper pie-wrapper--solid progress-88">
+                <span class="label">100<span class="smaller">%</span></span>
+              </div>
+            </div>
+			
+			<span class="tooltip" lang-key="percent"></span>
+		</li>
 	</ul>
 </nav>
-
-<div id="tape" class="container">
-    <div id="left-top"><img class="active-image left-top" src="static/images/cat1.gif"></div>
-    <div id="right-top"><img class="active-image right-top" src="static/images/cat2.gif"></div>
-    <div id="left-bottom"><img class="active-image left-bottom" src="static/images/cat3.gif"></div>
-    <div id="right-bottom"><img class="active-image right-bottom" src="static/images/cat4.gif"></div>
 </div>
 
 
 <script id="script_local" src="{{ url_for('static', path='/js/localizate.js') }}" rel="stylesheet"></script>
-
+<script id="script_local" src="{{ url_for('static', path='/js/remove_containers.js') }}" rel="stylesheet"></script>
+<!-- <script id="script_local" src="{{ url_for('static', path='/js/ajax.js') }}" rel="stylesheet"></script> -->
 
 <script>
-    const add_gif_field = document.querySelector('#add_gif')
-    
-    add_gif_field.addEventListener('click', function() {
-        document.querySelector('#tape').remove();
-        
-        let link = document.createElement("link");
+    window.onload = function() {
+        find_gif_create();
+    };
+
+    function reload_lang(){
+        let selectElement = document.querySelector('#localization-switcher')
+        const event = new Event('change');
+        selectElement.dispatchEvent(event);
+    }
+
+    function drop_link_create() {
+    let link = document.createElement("link");
         link.href="{{ url_for('static', path='/css/drop.css') }}";
         link.rel="stylesheet";
         document.body.appendChild(link);
         
         let container_drop = document.createElement("div");
+        container_drop.id="drop_field"
         container_drop.classList.add('container-drop')
         document.body.appendChild(container_drop);
 
@@ -100,12 +112,112 @@
         script_drop.src = "{{ url_for('static', path='/js/drop.js') }}";
         script_drop.defer = true;
         document.body.appendChild(script_drop);
+    }
 
-        let selectElement = document.querySelector('#localization-switcher')
-        const event = new Event('change');
-        selectElement.dispatchEvent(event);
+    document.querySelector('#find_gif').addEventListener('click', function() {
+        clear();
+        let search = document.createElement("input");
+        search.id="search_inp";
+        search.classList.add("search");
+        document.body.appendChild(search);
+        let submit_search = document.createElement("button");
+        submit_search.id="search_submit_btn";
+        submit_search.setAttribute("lang-key", "search");
+        submit_search.classList.add("search-btn");
+        document.body.appendChild(submit_search);
+        submit_search.addEventListener('click', function() {
+            // alert(search.value)
+        });
+        $.ajax({
+            url: '/content',
+            method: 'get',
+            dataType: 'html',
+            data: {find: search.value},
+            success: function(data){
+                alert(data);
+            }
+        });
+        find_gif_create();
+    });
 
-});
+    document.querySelector('#tape_gif').addEventListener('click', function() {
+        $.ajax({
+            url: '/index.php',
+            method: 'get',
+            dataType: 'html',
+            data: {text: 'Текст'},
+            success: function(data){
+                alert(data);
+            }
+        });
+
+        find_gif_create();
+    });
+
+    document.querySelector('#random_gif').addEventListener('click', function() {
+        $.ajax({
+            url: '/index.php',
+            method: 'get',
+            dataType: 'html',
+            data: {text: 'Текст'},
+            success: function(data){
+                alert(data);
+            }
+        });
+        find_gif_create();
+    });
+
+    
+    function find_gif_create() {
+        // clear();
+        
+        let container_find = document.createElement("div");
+        container_find.id="find_link"
+        container_find.classList.add('container-find')
+        document.body.appendChild(container_find);
+        for(let i = 1; i<13; i++){
+            // let div = document.createElement('div');
+            // container_find.appendChild(div);
+            let image = document.createElement('img');
+            image.id="img"
+            image.classList.add('active-image');
+            image.setAttribute("src", `static/images/cat${i}.gif`);
+            container_find.appendChild(image);
+        }
+        reload_lang();
+    }
+
+    document.querySelector('#create_gif').addEventListener('click', function() {
+        
+        clear();
+        drop_link_create();
+        reload_lang();
+    });
+
+
+    document.querySelector('#add_gif').addEventListener('click', function() {
+        
+        clear();
+        reload_lang();
+    });
+
+    document.querySelector('#settings_user').addEventListener('click', function() {
+        $.ajax({
+            url: '/index.php',
+            method: 'get',
+            dataType: 'html',
+            data: {text: 'Текст'},
+            success: function(data){
+                alert(data);
+            }
+        });
+        find_gif_create();
+    });
+
+   
+
+
+
 
 const menu_switchers = [...document.querySelectorAll('.menu')]
 menu_switchers.forEach(item => {
@@ -115,47 +227,37 @@ menu_switchers.forEach(item => {
 	})
 });
 
-const switchers = [...document.querySelectorAll('.active-image')]
+const switchers = [...document.querySelectorAll('#img')]
 
 switchers.forEach(item => {
-	item.addEventListener('mousedown', function() {
+	item.addEventListener('click', function() {
+        alert()
         let choise = Math.floor(Math.random()*3)+1;
 
-        if (item.classList[1] == 'left-top'){
-            let a = document.querySelector('.right-top');
-            a.classList.add('animateBack');
-            item.classList.add('animateForward');
-        } else if (item.classList[1] == 'right-top'){
-            let a = document.querySelector('.left-top');
-            a.classList.add('animateForward');
-            item.classList.add('animateBack');
-        // } else if (item.classList[1] == 'left-top' && choise == 3) {
-        //     let a = document.querySelector('.left-bottom');
-        //     a.classList.add('animateTop');
-        //     this.classList.add('animateBottom');
-        // }  else if (item.classList[1] == 'left-top' && choise == 4) {
-        //     let a = document.querySelector('.left-bottom');
-        //     a.classList.add('animateForwardBottom');
-        //     this.classList.add('animateBackTop');
-        }
-        // alert(a.classList)
-        
-        // alert(this.classList)
-        
-        // this.classList.remove('animate')
-        // alert(this.parentElement.id);
-        // here we know image position
-        // need ajax to get new images
-		// switchers.forEach(item => item.parentElement.classList.remove('is-active'))
-		// this.parentElement.classList.add('is-active')
-        // sleep(10)
-        // switchers.forEach(item => item.classList.remove('animateBack'))
-        // switchers.forEach(item => item.classList.remove('animateForward'))
+      
 	})
-    item.addEventListener("mouseup", (event) => {
-        switchers.forEach(item => item.src = `static/images/cat${Math.floor(Math.random()*7)+1}.gif`);
-        switchers.forEach(item => item.classList.remove('animateBack'))
-        switchers.forEach(item => item.classList.remove('animateForward'))
-    });
+    
 })
+
+$(".active-img").hover(
+  function () {
+      alert()
+      
+
+        $(this)
+        .css("z-index", "999")
+        .append(
+          `
+            <div class="opt-edit">
+                <i class="">Подробнее</i>
+            </div>`
+        );
+       
+
+  },
+  function () {
+    //When mouse hovers out DIV remove tools
+    // $(this).css("z-index", "0").find(".opt-edit").remove();
+  }
+);
 </script>

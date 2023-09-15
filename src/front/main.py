@@ -20,13 +20,6 @@ def login_get(request: Request):
     }
     return templates.TemplateResponse("login.html", context)
 
-@app.get("/user", response_class=HTMLResponse)
-def login_get(request: Request):
-    context = {
-        "request": request,
-    }
-    return templates.TemplateResponse("user.html", context)
-
 @app.get("/content", response_class=HTMLResponse)
 def login_get(request: Request):
     context = {
@@ -35,21 +28,6 @@ def login_get(request: Request):
     return templates.TemplateResponse("content.html", context)
 
 
-@app.get("/drop", response_class=HTMLResponse)
-def login_get(request: Request):
-    context = {
-        "request": request,
-    }
-    return templates.TemplateResponse("drop.html", context)
-
-
-
-@app.get("/admin", response_class=HTMLResponse)
-def login_get(request: Request):
-    context = {
-        "request": request,
-    }
-    return templates.TemplateResponse("admin.html", context)
 
 
 if __name__ == "__main__":

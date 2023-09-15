@@ -16,6 +16,5 @@ function dropHandler(ev) {
   }
 
   function dragOverHandler(ev) {
-    console.log("File(s) in drop zone");
       ev.preventDefault();
   }
