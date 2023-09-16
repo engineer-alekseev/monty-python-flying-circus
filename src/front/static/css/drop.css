@@ -1,21 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-family: "Lato", sans-serif;
-    line-height: 1;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-  }
-  
-body {
-	margin: 0;
-	font-family: Impact, Charcoal, sans-serif; 
-	font-weight: bolder;
-    overflow: hidden;
-	background: #3b4465;
-}
+
 
 
 .container-drop{

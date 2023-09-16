@@ -1,10 +1,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<link href="{{ url_for('static', path='/css/sidebar.css') }}" rel="stylesheet">
 <link href="{{ url_for('static', path='/css/content.css') }}" rel="stylesheet">
-<!-- <link href="{{ url_for('static', path='/css/drop.css') }}" rel="stylesheet"> -->
+<link href="{{ url_for('static', path='/css/drop.css') }}" rel="stylesheet">
 
-<div style="position: fixed;">
+<div style="position: fixed; z-index: 11;">
 <nav class="sidebar-navigation">
     <ul>
         <li class="menu">
@@ -15,13 +14,13 @@
         </li>
     </ul>
 	<ul>
-		<li id="find_gif" class="menu active">
+        <li id="tape_gif" class="menu active">
+            <i class="fa fa-camera-retro"></i>
+            <span class="tooltip" lang-key="tape"></span>
+        </li>
+		<li id="find_gif" class="menu">
 			<i class="fa fa-magnifying-glass"></i>
 			<span class="tooltip" lang-key="search"></span>
-		</li>
-        <li id="tape_gif" class="menu">
-			<i class="fa fa-camera-retro"></i>
-			<span class="tooltip" lang-key="tape"></span>
 		</li>
         <li id="private_gif" class="menu">
 			<i class="fa fa-user-secret"></i>
@@ -44,7 +43,7 @@
 			<i class="fa fa-cogs"></i>
 			<span class="tooltip" lang-key="settings"></span>
 		</li>
-        <li id="" class="">
+        <li id="" class="size-bar">
             <div class="set-size charts-container">
             <div class="pie-wrapper pie-wrapper--solid progress-88">
                 <span class="label">100<span class="smaller">%</span></span>
@@ -63,108 +62,100 @@
 
 <script>
     window.onload = function() {
-        find_gif_create();
+        get_all();
     };
 
+    document.querySelector('#tape_gif').addEventListener('click', function() {
+        get_all()
+
+        // find_gif_create(data);
+    });
+
+    function get_all(){
+        $.ajax({
+            url: '/tape',
+            method: 'get',
+            dataType: 'html',
+            data: {tape: 'all'},
+            success: function(data){
+                // alert(data);
+                find_gif_create(data);
+            }
+        });
+    }
+
+
     document.querySelector('#find_gif').addEventListener('click', function() {
-        clear();
+        
         let search = document.createElement("input");
         search.id="search_inp";
         search.classList.add("search");
         document.body.appendChild(search);
+
         let submit_search = document.createElement("div");
         submit_search.id="search_submit_btn";
         submit_search.setAttribute("lang-key", "search");
         submit_search.classList.add("search-btn");
         document.body.appendChild(submit_search);
-
-        // let submit_search = document.querySelector("#search_submit_btn");
-    //     let search = document.querySelector("#search_inp");
-        submit_search.addEventListener('click', function() {
-            alert(search.value)
         
-
-            $.ajax({
-                url: '/content',
-                method: 'get',
-                dataType: 'html',
-                data: {find: search.value},
-                success: function(data){
-                    alert(data);
-                }
-            });
-        });
-        find_gif_create();
-    });
-
-    document.querySelector('#tape_gif').addEventListener('click', function() {
-        $.ajax({
-            url: '/index.php',
-            method: 'get',
-            dataType: 'html',
-            data: {text: 'Текст'},
-            success: function(data){
-                // alert(data);
-                
-            }
-        });
-
-        find_gif_create();
+        // submit_search.addEventListener('click', function() {
+        //     $.ajax({
+        //         url: '/content',
+        //         method: 'get',
+        //         dataType: 'html',
+        //         data: {find: search.value},
+        //         success: function(data){
+        //             // alert(data);
+        //             clear();
+        //             find_gif_create(data);
+        //         }
+        //     });
+        // });
     });
 
     document.querySelector('#random_gif').addEventListener('click', function() {
         $.ajax({
-            url: '/index.php',
+            url: '/random',
             method: 'get',
             dataType: 'html',
-            data: {text: 'Текст'},
+            data: {random: 'all'},
             success: function(data){
-                alert(data);
+                find_gif_create(data);
             }
         });
-        find_gif_create();
     });
 
     
-    function find_gif_create() {
-        // clear();
- 
+    function find_gif_create(data) {
         let container_find = document.createElement("div");
         container_find.id="find_link"
         container_find.classList.add('container-find')
         document.body.appendChild(container_find);
-        for(let i = 1; i<13; i++){
+        data.forEach(item => {
+            
             let div = document.createElement('div');
             div.classList.add('active-image');
             container_find.appendChild(div);
 
             let image = document.createElement('img');
-            image.id=`img${i}`
+            image.id=`img${item}`
             image.classList.add('in-image');
             image.setAttribute("onclick", `save_img(${image.id})`);
-            image.setAttribute("src", `static/images/cat${i}.gif`);
+            image.setAttribute("src", `static/images/dog${item}.gif`);
             div.appendChild(image);
+            
+            let like_div = document.createElement('div');
+            like_div.classList.add('hide_sl');
+            like_div.innerHTML = `<i class="fa-regular fa-heart"></i>123`
+            div.appendChild(like_div);  
             
             let save_div = document.createElement('div');
             save_div.classList.add('hide_load');
-            save_div.innerHTML = `<i class="fa fa-thumbs-share>"></i>`
+            save_div.innerHTML = `<i class="fas fa-share"></i>`
             div.appendChild(save_div);
-
-            let like_div = document.createElement('div');
-            like_div.classList.add('hide_sl');
-            like_div.innerHTML = `<i class="fa-regular fa-heart"></i>`
-            div.appendChild(like_div);  
-        }
+        })
         reload_lang();
     }
-
-    document.querySelector('#create_gif').addEventListener('click', function() {
-        
-        clear();
-        drop_link_create();
-        reload_lang();
-    });
-
 
     document.querySelector('#add_gif').addEventListener('click', function() {
         
@@ -172,12 +163,19 @@
         reload_lang();
     });
 
+    document.querySelector('#create_gif').addEventListener('click', function() {
+        
+        clear();
+        drop_link_create();
+        reload_lang();
+    });
+    
     document.querySelector('#settings_user').addEventListener('click', function() {
         $.ajax({
-            url: '/index.php',
+            url: '/setting',
             method: 'get',
             dataType: 'html',
-            data: {text: 'Текст'},
+            data: {setting: ''},
             success: function(data){
                 alert(data);
             }
@@ -193,11 +191,8 @@
     }
 
     function drop_link_create() {
-    let link = document.createElement("link");
-        link.href="{{ url_for('static', path='/css/drop.css') }}";
-        link.rel="stylesheet";
-        document.body.appendChild(link);
-        
+    
+        clear()
         let container_drop = document.createElement("div");
         container_drop.id="drop_field"
         container_drop.classList.add('container-drop')
@@ -223,19 +218,24 @@
         drop_zone.appendChild(canv);
         
         let script_noise = document.createElement("script");
+        script_noise.id="script_noise"
         script_noise.src = "{{ url_for('static', path='/js/noise.js') }}";
         script_noise.defer = true;
         document.body.appendChild(script_noise);
 
         let script_drop = document.createElement("script");
+        script_drop.id="script_drop"
         script_drop.src = "{{ url_for('static', path='/js/drop.js') }}";
         script_drop.defer = true;
         document.body.appendChild(script_drop);
     }
 
 
-    function save_img(id){
-        alert(id)
+    function save_img(elem){
+        let it = document.body.querySelector(`#${elem}`)
+        it.classList.add('zoom');
+        // `${elem.id}`
+        // alert("1" + id.id)
     }
 
 
@@ -257,29 +257,4 @@ menu_switchers.forEach(item => {
 //         // let choise = Math.floor(Math.random()*3)+1;
 
       
-// 	})
-    
-// })
-
-$(".active-image").hover(
-  function () {
-      alert()
-      
-
-        $(this)
-        .css("z-index", "999")
-        .append(
-          `
-            <div class="opt-edit">
-                <i class="">Подробнее</i>
-            </div>`
-        );
-       
-
-  },
-  function () {
-    //When mouse hovers out DIV remove tools
-    // $(this).css("z-index", "0").find(".opt-edit").remove();
-  }
-);
 </script>
