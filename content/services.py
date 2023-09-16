@@ -5,7 +5,7 @@ from database_handler import (database, db_content,
                               db_content_tags)
 from content.models import ContentIn
 from datetime import datetime
-
+from minio_class import Minio_client
 
 async def post_content(current_user: User, content: ContentIn, tag):
     query = db_content.select().where(db_content.c.link_to_storage == content.link_to_storage)
@@ -106,7 +106,7 @@ async def delete_content(current_user: User, id: int):
     return 200
 
 
-async def get_content(current_user : User, skip, limit, order_by,
+async def get_content(skip, limit, order_by,
                       order_desc, filter_tag):
     order_by_desc = 'DESC' if order_desc else 'ASC'
     sql_private, sql_and = '', ''
@@ -116,20 +116,23 @@ async def get_content(current_user : User, skip, limit, order_by,
         sql_where = "WHERE"
         sql_filter_tag = f"tag = '{filter_tag}'"
 
-    if not current_user.is_admin and not current_user.is_moderator:
-        if filter_tag != None:
-            sql_and = 'AND'
-        sql_private = 'is_private = false'
-        sql_where = "WHERE"
+    # if not current_user.is_admin and not current_user.is_moderator:
+    #     if filter_tag != None:
+    #         sql_and = 'AND'
+    #     sql_private = 'is_private = false'
+    #     sql_where = "WHERE"
     query = (f"SELECT * FROM content JOIN content_tags ON content.id = content_id "
              "JOIN tags ON content_tags.tags_id = tags.id "
              f"{sql_where} {sql_private} {sql_and} {sql_filter_tag} order by "
              f"{order_by} {order_by_desc} OFFSET {skip} LIMIT {limit}")
     result = await database.fetch_all(query)
-
+    m = Minio_client('config.ini')
     return_list = []
-    for res in result:
-        return_list.append(res)
+    for i in range(1,9):
+        # return_list = [m.get_url(f'cat{i}.gif') for i in range(1,9)]
+    # for res in result:
+        
+        return_list.append(m.get_url(f'cat{i}.gif'))
 
     return return_list
 
