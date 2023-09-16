@@ -12,11 +12,10 @@ from users.models import Meta
 
 class ContentOut(BaseModel):
     id : int
-    username: str
-    email: str | None
-    is_admin: bool | None
-    is_moderator: bool | None
-    friends: list[int] | None = []
+    link_to_storage: str
+    is_private: bool
+    counter: int
+    updated_at: datetime
     created_at: datetime
 
 

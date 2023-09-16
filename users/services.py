@@ -17,6 +17,7 @@ class UserServices:
       ins["is_admin"] = False
       ins["is_moderator"] = False
       ins['friends'] = []
+      ins['email'] = None
       ins['hashed_password'] = Hash().get_password_hash(user.password)
       del ins['password']
       query = db_users.insert().values(ins)

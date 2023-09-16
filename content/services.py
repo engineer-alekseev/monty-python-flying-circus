@@ -20,6 +20,8 @@ async def post_content(current_user: User, content: ContentIn):
         query = db_useres_content.insert().values(
             user_id=current_user.id, content_id=last_record_id)
         await database.execute(query)
+        
+        return {**ins, "id": last_record_id}
     else:
         query = db_useres_content.select().where(
             db_useres_content.c.user_id == current_user.id,
@@ -42,6 +44,68 @@ async def post_content(current_user: User, content: ContentIn):
         await database.execute(query)
 
     return ins
+
+
+async def delete_content(current_user: User, id: int):
+    query = db_content.select().where(db_content.c.id == id)
+    content_res = await database.fetch_one(query)
+    if content_res == None:
+        raise HTTPException(status_code=404,
+                            detail="Content not found")
+    
+    if not current_user.is_admin and not current_user.is_moderator:
+        # Удаляю связь картинки с текущим пользователем
+        query = db_useres_content.delete().where(
+            db_useres_content.c.user_id == current_user.id,
+            db_useres_content.c.content_id == id
+        )
+        await database.execute(query)
+        # Если это была последняя подписка на картинку, удаляем ее, иначе уменьшаем счетчик на 1
+        if content_res['counter'] == 1:
+            query = db_content.delete().where(
+                db_content.c.id == id
+            )
+            await database.execute(query)
+        else:
+            query = db_content.update().values(counter=content_res['counter'] - 1).where(
+                db_content.c.id == id
+            )
+            await database.execute(query)
+
+    else:
+        # Если админ или модератор удаляем все связи с этой картинкой и ее саму
+        query = db_useres_content.delete().where(
+            db_useres_content.c.content_id == id
+        )
+        await database.execute(query)
+
+        query = db_content.delete().where(
+            db_content.c.id == id
+        )
+        await database.execute(query)
+    return 200
+
+
+async def get_content(current_user : User, skip, limit, order_by,
+                      order_desc, filter_tag):
+    order_by_desc = 'DESC' if order_desc else 'ASC'
+    sql_private = 'where is_private = false'
+    sql_filter_tag = ''
+    if filter_tag != None:
+        query = f"SELECT * FROM content_tags where tag = ILIKE{filter_tag}"
+
+
+    if current_user.is_admin or current_user.is_moderator:
+        sql_private = ''
+    query = (f"SELECT * FROM content {sql_private} order by "
+             f"{order_by} {order_by_desc} OFFSET {skip} LIMIT {limit}")
+    result = await database.fetch_all(query)
+
+    return_list = []
+    for res in result:
+        return_list.append(res)
+
+    return return_list
 
 
 # async def check_unique(content : ContentIn):
