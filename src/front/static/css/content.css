@@ -6,7 +6,7 @@
     line-height: 1;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
-    box-sizing:border-box;
+    box-sizing: border-box;
 }
 
 html, body {
@@ -18,27 +18,89 @@ html, body {
 }
 
 
-img{
+.container-find{
+    /* display:inline-table; */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);  grid-gap: 20px;
     margin-left: 90px;
-    width: 48%;
-    margin: 10px;
-    object-position:center;
-    object-fit:cover;
-    border-radius: 10px;
+    width: 90vw;
+    left: 80px;
+    justify-content: space-between;
 }
 
-/* img:hover{
-    object-position:center;
+.active-image {
+    /* width: 100%; */
+    height: 100%;
+    padding-bottom: 100%; /* Maintain aspect ratio */
+    position: relative;
+    object-fit: cover; /* Scale the image while preserving aspect ratio */
+  object-position: center; 
+  
+  }
 
-    width:5%;
-} */
-.container-find{
-    margin-left: 90px;
-    /* overflow-y:hidden; */
-    /* height: 90vh; */
-    left: 80px;
-    border-radius:  10px;
-    z-index: 1;
+.in-image {
+    position: absolute;
+    bottom: 0%;
+    left: 0;
+    width: 100%;
+    color: #000;
+    font-size: 20px;
+    padding: 10px 10px 10px 16px;
+    text-align: center;
+}
+
+.hide_sl {
+    opacity: 0;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 100px;
+    background: rgba(0, 0, 0, .3);
+    /* left: calc(50% - 100px); */
+    color:#fff;
+    transition: opacity .3s;
+    z-index: 11;
+}
+
+
+.active-image:hover .hide_sl {
+    opacity: 1;
+    transition: opacity .3s;
+}
+
+.hide_sl:hover {
+    opacity: 1;
+    background-color: black;
+    transition: opacity .3s;
+
+}
+
+.hide_load {
+    opacity: 0;
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 100px;
+    left:  200px;
+    background: rgba(0, 0, 0, .3);
+    /* left: calc(50% - 100px); */
+    color:#fff;
+    transition: opacity .3s;
+    z-index: 11;
+}
+
+
+.active-image:hover .hide_load {
+    opacity: 1;
+    transition: opacity .3s;
+}
+
+.hide_load:hover {
+    opacity: 1;
+    color: white;
+    background-color: black;
+    transition: opacity .3s;
+    
 }
 
 .animateForward {
@@ -50,6 +112,7 @@ img{
     margin-top: 10px;
     margin-left: 90px;
     width: 500px;
+    height: 35px;
     font-size:20px;
     padding: 5px;
     border-radius: 5px;
@@ -61,13 +124,14 @@ img{
     margin-top: 10px;
     margin-left: 590px;
     width: 100px;
+    height: 35px;
     font-size:20px;
     padding: 5px;
     border-radius: 5px;
     z-index: 12;
 }
 
-
+/* 
 @keyframes effectLayerMoveLeft {
     0% {
         transform: translateX(-20vw) scale(1);
@@ -126,4 +190,5 @@ img{
 	100% {
         transform: translateX(5vw);
 	}
-}
+} */
+

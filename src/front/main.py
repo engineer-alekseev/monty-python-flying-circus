@@ -28,6 +28,12 @@ def login_get(request: Request):
     return templates.TemplateResponse("content.html", context)
 
 
+@app.get("/admin", response_class=HTMLResponse)
+def login_get(request: Request):
+    context = {
+        "request": request,
+    }
+    return templates.TemplateResponse("admin.html", context)
 
 
 if __name__ == "__main__":

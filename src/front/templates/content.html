@@ -60,12 +60,131 @@
 
 <script id="script_local" src="{{ url_for('static', path='/js/localizate.js') }}" rel="stylesheet"></script>
 <script id="script_local" src="{{ url_for('static', path='/js/remove_containers.js') }}" rel="stylesheet"></script>
-<!-- <script id="script_local" src="{{ url_for('static', path='/js/ajax.js') }}" rel="stylesheet"></script> -->
 
 <script>
     window.onload = function() {
         find_gif_create();
     };
+
+    document.querySelector('#find_gif').addEventListener('click', function() {
+        clear();
+        let search = document.createElement("input");
+        search.id="search_inp";
+        search.classList.add("search");
+        document.body.appendChild(search);
+        let submit_search = document.createElement("div");
+        submit_search.id="search_submit_btn";
+        submit_search.setAttribute("lang-key", "search");
+        submit_search.classList.add("search-btn");
+        document.body.appendChild(submit_search);
+
+        // let submit_search = document.querySelector("#search_submit_btn");
+    //     let search = document.querySelector("#search_inp");
+        submit_search.addEventListener('click', function() {
+            alert(search.value)
+        
+
+            $.ajax({
+                url: '/content',
+                method: 'get',
+                dataType: 'html',
+                data: {find: search.value},
+                success: function(data){
+                    alert(data);
+                }
+            });
+        });
+        find_gif_create();
+    });
+
+    document.querySelector('#tape_gif').addEventListener('click', function() {
+        $.ajax({
+            url: '/index.php',
+            method: 'get',
+            dataType: 'html',
+            data: {text: 'Текст'},
+            success: function(data){
+                // alert(data);
+                
+            }
+        });
+
+        find_gif_create();
+    });
+
+    document.querySelector('#random_gif').addEventListener('click', function() {
+        $.ajax({
+            url: '/index.php',
+            method: 'get',
+            dataType: 'html',
+            data: {text: 'Текст'},
+            success: function(data){
+                alert(data);
+            }
+        });
+        find_gif_create();
+    });
+
+    
+    function find_gif_create() {
+        // clear();
+ 
+        let container_find = document.createElement("div");
+        container_find.id="find_link"
+        container_find.classList.add('container-find')
+        document.body.appendChild(container_find);
+        for(let i = 1; i<13; i++){
+            let div = document.createElement('div');
+            div.classList.add('active-image');
+            container_find.appendChild(div);
+
+            let image = document.createElement('img');
+            image.id=`img${i}`
+            image.classList.add('in-image');
+            image.setAttribute("onclick", `save_img(${image.id})`);
+            image.setAttribute("src", `static/images/cat${i}.gif`);
+            div.appendChild(image);
+            
+            let save_div = document.createElement('div');
+            save_div.classList.add('hide_load');
+            save_div.innerHTML = `<i class="fa fa-thumbs-share>"></i>`
+            div.appendChild(save_div);
+
+            let like_div = document.createElement('div');
+            like_div.classList.add('hide_sl');
+            like_div.innerHTML = `<i class="fa-regular fa-heart"></i>`
+            div.appendChild(like_div);  
+        }
+        reload_lang();
+    }
+
+    document.querySelector('#create_gif').addEventListener('click', function() {
+        
+        clear();
+        drop_link_create();
+        reload_lang();
+    });
+
+
+    document.querySelector('#add_gif').addEventListener('click', function() {
+        
+        clear();
+        reload_lang();
+    });
+
+    document.querySelector('#settings_user').addEventListener('click', function() {
+        $.ajax({
+            url: '/index.php',
+            method: 'get',
+            dataType: 'html',
+            data: {text: 'Текст'},
+            success: function(data){
+                alert(data);
+            }
+        });
+        find_gif_create();
+    });
+
 
     function reload_lang(){
         let selectElement = document.querySelector('#localization-switcher')
@@ -114,132 +233,35 @@
         document.body.appendChild(script_drop);
     }
 
-    document.querySelector('#find_gif').addEventListener('click', function() {
-        clear();
-        let search = document.createElement("input");
-        search.id="search_inp";
-        search.classList.add("search");
-        document.body.appendChild(search);
-        let submit_search = document.createElement("button");
-        submit_search.id="search_submit_btn";
-        submit_search.setAttribute("lang-key", "search");
-        submit_search.classList.add("search-btn");
-        document.body.appendChild(submit_search);
-        submit_search.addEventListener('click', function() {
-            // alert(search.value)
-        });
-        $.ajax({
-            url: '/content',
-            method: 'get',
-            dataType: 'html',
-            data: {find: search.value},
-            success: function(data){
-                alert(data);
-            }
-        });
-        find_gif_create();
-    });
 
-    document.querySelector('#tape_gif').addEventListener('click', function() {
-        $.ajax({
-            url: '/index.php',
-            method: 'get',
-            dataType: 'html',
-            data: {text: 'Текст'},
-            success: function(data){
-                alert(data);
-            }
-        });
-
-        find_gif_create();
-    });
-
-    document.querySelector('#random_gif').addEventListener('click', function() {
-        $.ajax({
-            url: '/index.php',
-            method: 'get',
-            dataType: 'html',
-            data: {text: 'Текст'},
-            success: function(data){
-                alert(data);
-            }
-        });
-        find_gif_create();
-    });
-
-    
-    function find_gif_create() {
-        // clear();
-        
-        let container_find = document.createElement("div");
-        container_find.id="find_link"
-        container_find.classList.add('container-find')
-        document.body.appendChild(container_find);
-        for(let i = 1; i<13; i++){
-            // let div = document.createElement('div');
-            // container_find.appendChild(div);
-            let image = document.createElement('img');
-            image.id="img"
-            image.classList.add('active-image');
-            image.setAttribute("src", `static/images/cat${i}.gif`);
-            container_find.appendChild(image);
-        }
-        reload_lang();
+    function save_img(id){
+        alert(id)
     }
-
-    document.querySelector('#create_gif').addEventListener('click', function() {
-        
-        clear();
-        drop_link_create();
-        reload_lang();
-    });
-
-
-    document.querySelector('#add_gif').addEventListener('click', function() {
-        
-        clear();
-        reload_lang();
-    });
-
-    document.querySelector('#settings_user').addEventListener('click', function() {
-        $.ajax({
-            url: '/index.php',
-            method: 'get',
-            dataType: 'html',
-            data: {text: 'Текст'},
-            success: function(data){
-                alert(data);
-            }
-        });
-        find_gif_create();
-    });
-
-   
-
-
 
 
 const menu_switchers = [...document.querySelectorAll('.menu')]
 menu_switchers.forEach(item => {
-    item.addEventListener('click', function() {        
+    item.addEventListener('click', function() { 
         menu_switchers.forEach(item => item.classList.remove('active'))
 		this.classList.add('active')
 	})
 });
 
-const switchers = [...document.querySelectorAll('#img')]
+// const switchers = [...document.querySelectorAll('.active-image:hover')]
 
-switchers.forEach(item => {
-	item.addEventListener('click', function() {
-        alert()
-        let choise = Math.floor(Math.random()*3)+1;
+// switchers.forEach(item => {
+//     alert()
+// 	item.addEventListener('click', function() {
+//         enu_switchers.forEach(item => item.classList.add('active'))
+        
+//         // let choise = Math.floor(Math.random()*3)+1;
 
       
-	})
+// 	})
     
-})
+// })
 
-$(".active-img").hover(
+$(".active-image").hover(
   function () {
       alert()
       
