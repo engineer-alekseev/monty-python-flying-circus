@@ -1,8 +1,8 @@
-from typing import List, Annotated
+from typing import Annotated
 from users.models import UserOut, Token, UserIn, User, UserOutList, UserUpdate
 from users.services import get_current_active_user
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import Depends, Query
+from fastapi import Depends
 from users.services import UserServices
 
 from fastapi import APIRouter

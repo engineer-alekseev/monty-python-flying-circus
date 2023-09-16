@@ -1,12 +1,11 @@
 """Создание таблиц и подключение базы данных + создание суперпользователя"""
 from datetime import datetime
-import databases
-from sqlalchemy import create_engine, MetaData, Table, Column, Integer, DateTime, TEXT, null
-from sqlalchemy import String, Boolean, VARCHAR, NUMERIC, UniqueConstraint, ForeignKey, BIGINT
-from sqlalchemy.dialects.postgresql import JSONB, ARRAY
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, DateTime
+from sqlalchemy import String, Boolean, ForeignKey
+from sqlalchemy.dialects.postgresql import ARRAY
 from users.hash import Hash
 from config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASS
-import asyncio
+import databases
 
 DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(DATABASE_URL)
@@ -65,13 +64,14 @@ db_content_tags = Table(
 
 
 metadata.create_all(engine)
-# создание суперпользователя
-# query = db_users.select().where(db_users.c.email == "admin@example.com")
-# s = asyncio.run(database.execute(query))
-# # result = conn.execute(query)
-# # if result == None:
-# #     query = db_users.insert().values(username="admin",
-# #                                    hashed_password=Hash().get_password_hash("admin"),
-# #                                     email="admin@example.com", is_admin=True ,created_at=datetime.now())
-# #     result = conn.execute(query)
-# print(dict(s))
+
+s = db_users.select().where(db_users.c.username == "admin")
+conn = engine.connect()
+result = conn.execute(s).fetchall()
+if len(result) == 0:
+    ins = db_users.insert().values(username="admin",
+                                   hashed_password=Hash().get_password_hash("admin"),
+                                    is_admin=True, is_moderator = True, email="email",
+                                    friends=[], created_at=datetime.now())
+    conn = engine.connect()
+    result = conn.execute(ins)

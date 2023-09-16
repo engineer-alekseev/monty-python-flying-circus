@@ -1,4 +1,3 @@
-from typing import Optional
 from datetime import datetime
 from pydantic import BaseModel, constr
 
@@ -23,7 +22,6 @@ class UserOutList(BaseModel):
 class UserIn(BaseModel):
     username: str
     password: constr(min_length=8, max_length=16)
-
 
 
 class UserUpdate(BaseModel):
