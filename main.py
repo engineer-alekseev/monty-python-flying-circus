@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from users.views import user_router, token_router
+from content.views import content_router
 from fastapi.middleware.cors import CORSMiddleware
 from database_handler import database
 import uvicorn
@@ -28,6 +29,7 @@ async def shutdown():
 
 app.include_router(user_router)
 app.include_router(token_router)
+app.include_router(content_router)
 
 
 if __name__ == "__main__":
