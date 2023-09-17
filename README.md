@@ -7,18 +7,19 @@ repository for implementation school 21 hackaton task
 
 # WEB APP: www.bytecode.su
 how to test: 
-user: admin
-pass: admin
+- user: admin
+- pass: admin
+
 tags to explore:
- -- angry
- -- cute
- -- dancing
- -- funny
- -- happy
- -- sad
- -- sleep
- -- working
- -- no cats
+- angry
+- cute
+- dancing
+- funny
+- happy
+- sad
+- sleep
+- working
+- no cats
  
 # API documentation: www.bytecode.su/docs
 
