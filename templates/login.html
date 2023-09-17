@@ -1,0 +1,98 @@
+<html lang="en">
+  <head>
+    <meta name="google-signin-client_id" content="[Your Client ID]">
+    <!-- TODO <script src="https://accounts.google.com/gsi/client" async defer></script> -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+  </head>
+  <body>
+    <nav class="navbar">
+          <div class="navbar-right">
+              <select id="localization-switcher" class="locale-switcher">
+                <option value="ru" lang-key="rus"></option>
+                <option value="en" lang-key="eng"></option>
+              </select>
+          </div>
+  </nav>
+
+<link href="https://bytecode.su/static/css/login.css" rel="stylesheet">
+<section class="forms-section">
+  <h1 class="section-title" lang-key="hello"></h1>
+  <div class="forms">
+    <div class="form-wrapper is-active">
+      <button type="button" class="switcher switcher-login" lang-key="login">
+        <span class="underline"></span>
+      </button>
+      <form class="form form-login" method="post" action="/">
+        <fieldset>
+          <legend>Please, enter your email and password for login.</legend>
+          <div class="input-block">
+            <label for="login-username" lang-key="login"></label>
+            <input id="login-username" type="text" name="username" required>
+          </div>
+          <div class="input-block">
+            <label for="login-password" lang-key="passwd"></label>
+            <input id="login-password" type="password" name="password" required>
+          </div>
+        </fieldset>
+        <button type="submit" class="btn-login" lang-key="login_submit"></button>
+
+        <!-- TODO google-->
+        <!-- data-client_id="YOUR_GOOGLE_CLIENT_ID"
+         data-login_uri="https://your.domain/your_login_endpoint" -->
+        <!-- <div type="submit" >
+        <div id="g_id_onload"
+         
+         data-auto_prompt="false">
+        </div>https://accounts.google.com/AccountChooser/signinchooser?hl=en_US&theme=glif&flowName=GlifWebSignIn&flowEntry=AccountChooser
+        <div class="g_id_signin"
+          data-type="standard"
+          data-size="large"
+          data-theme="outline"
+          data-text="sign_in_with"
+          data-shape="rectangular"
+          data-logo_alignment="left">
+        </div>
+      </div> 
+      <div class="g-signin2" data-onsuccess="onSignIn"></div>-->
+        
+        <!-- google-->
+      </form>
+    </div>
+    <div class="form-wrapper">
+      <button type="button" class="switcher switcher-signup" lang-key="sign_up">
+        <span class="underline"></span>
+      </button>
+      <form class="form form-signup">
+        <fieldset>
+          <legend>Please, enter your email, password and password confirmation for sign up.</legend>
+          <div class="input-block">
+            <label for="signup-login" lang-key="login">Login</label>
+            <input id="signup-login" name="login" type="login" required>
+          </div>
+          <div class="input-block">
+            <label for="signup-password" lang-key="passwd"></label>
+            <input id="signup-password" name="password" type="password" required>
+          </div>
+          <div class="input-block">
+            <label for="signup-password-confirm" lang-key="passwd_conf"> </label>
+            <input id="signup-password-confirm" type="password" required>
+          </div>
+        </fieldset>
+        <button type="submit" class="btn-signup" lang-key="continue"></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script src="https://bytecode.su/static/js/localizate.js" rel="stylesheet"></script>
+<script src="https://bytecode.su/static/js/login.js" rel="stylesheet"></script>
+<!-- TODO 
+  <script type="text/javascript">
+        (function() {
+         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+         po.src = 'https://apis.google.com/js/client.js?onload=onLoadCallback';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+       })();
+  </script> -->
+</body>
+</html>

@@ -2,7 +2,6 @@ from datetime import datetime
 from pydantic import BaseModel
 from users.models import Meta
 
-
 class ContentOut(BaseModel):
     id : int
     link_to_storage: str
@@ -15,8 +14,4 @@ class ContentOut(BaseModel):
 class ContentOutList(BaseModel):
     rows : list[ContentOut]
     meta : Meta
-
-class ContentIn(BaseModel):
-    link_to_storage: str
-    is_private: bool | None = False
 

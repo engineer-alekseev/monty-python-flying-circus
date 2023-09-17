@@ -1,0 +1,264 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<link href="https://bytecode.su/static/css/content.css" rel="stylesheet">
+<link href="https://bytecode.su/static/css/drop.css" rel="stylesheet">
+<link href="https://bytecode.su/static/css/noise.css" rel="stylesheet">
+<link href="https://bytecode.su/static/css/sidebar.css" rel="stylesheet">
+
+<div class="container-menu">
+<nav class="sidebar-navigation">
+    <ul>
+        <li class="menu">
+            <select id="localization-switcher" class="locale-switcher">
+                <option value="ru" lang-key="rus"></option>
+                <option value="en" lang-key="eng"></option>
+              </select>
+        </li>
+    </ul>
+	<ul>
+        <li id="tape_gif" class="menu active">
+            <i class="fa fa-camera-retro"></i>
+            <span class="tooltip" lang-key="tape"></span>
+        </li>
+		<li id="find_gif" class="menu">
+			<i class="fa fa-magnifying-glass"></i>
+			<span class="tooltip" lang-key="search"></span>
+		</li>
+        <li id="private_gif" class="menu">
+			<i class="fa fa-user-secret"></i>
+			<span class="tooltip" lang-key="private"></span>
+		</li>
+        <li id="random_gif" class="menu">
+			<i class="fa fa-blind"></i>
+			<span class="tooltip" lang-key="random"></span>
+		</li>
+        <li id="add_gif" class="menu">
+			<i class="fa fa-share"></i>
+			<span class="tooltip" lang-key="add_gif"></span>
+		</li>
+		<li id="create_gif" class="menu">
+			<i class="fa fa-file-video"></i>
+			<span class="tooltip" lang-key="create_gif"></span>
+		</li>
+		
+		<li id="settings_user" class="menu">
+			<i class="fa fa-cogs"></i>
+			<span class="tooltip" lang-key="settings"></span>
+		</li>
+        <li id="" class="size-bar">
+            <div class="set-size charts-container">
+            <div class="pie-wrapper pie-wrapper--solid progress-88">
+                <span class="label">100<span class="smaller">%</span></span>
+              </div>
+            </div>
+			
+			<span class="tooltip" lang-key="percent"></span>
+		</li>
+	</ul>
+</nav>
+</div>
+
+<script id="script_local" src="https://bytecode.su/static/js/drop.js" rel="stylesheet"></script>
+<script id="script_local" src="https://bytecode.su/static/js/localizate.js" rel="stylesheet"></script>
+<script id="script_local" src="https://bytecode.su/static/js/remove_containers.js" rel="stylesheet"></script>
+
+<script>
+
+    // нужный костыль
+    window.ready = function() {
+        get_all();
+    };
+
+    // обработчик нажатий элементов меню
+    document.querySelector('#tape_gif').addEventListener('click', function() {
+        clear();
+        get_all()
+    });
+
+    document.querySelector('#find_gif').addEventListener('click', function() {
+        clear();
+        find_tag();
+        create_find_elements();
+        reload_lang();
+    });
+    
+    document.querySelector('#random_gif').addEventListener('click', function() {
+        clear();
+        get_all();
+    });
+
+    document.querySelector('#add_gif').addEventListener('click', function() {
+        clear();
+        reload_lang();
+    });
+
+    document.querySelector('#create_gif').addEventListener('click', function() {
+        clear();
+        drop_link_create();
+        reload_lang();
+    });
+    
+    document.querySelector('#settings_user').addEventListener('click', function() {
+        clear();
+        $.ajax({
+            url: '/content/public',
+            method: 'get',
+            dataType: 'html',
+            data: {setting: ''},
+            success: function(data){
+            }
+        });
+        create_images();
+    });
+
+    // конец обработчика
+
+    // обработчик скроллбара
+    window.addEventListener('scroll', function() {
+        var contentHeight = document.documentElement.scrollHeight;
+        var windowHeight = window.innerHeight;
+        var scrollPosition = window.scrollY || window.pageYOffset;
+        let diff = Math.floor(scrollPosition - contentHeight + windowHeight);
+        if (diff >= -100) {
+            let check_tag = document.querySelector('#search_input');
+            if (check_tag == null ) get_all();
+            else create_images_tag();
+            return diff-200;
+        }
+    });
+
+    // получение картинок
+    function get_all(tag=null){
+        $.ajax({
+        url: '/content/public',
+        method:  'get',
+        dataType: 'html',
+        data: {},
+        success: function(responce){
+            data = JSON.parse(responce)
+            create_images(data['rows']);
+        }
+    });
+    }
+
+    function find_tag(){
+        // TODO load and find text in input
+        // $.ajax({
+        //     url: '/content/public',
+        //     method: 'get',
+        //     dataType: 'html',
+        //     data: {search: submit_search.value},
+        //     success: function(responce){
+                
+        //         responce = JSON.parse(responce)
+        //         create_images(responce['rows']);
+        //     }
+        // });
+    }
+
+    // создание элементов поиска
+    function create_find_elements(){
+        let submit_search = document.createElement("button");
+        submit_search.id="search_submit_btn";
+        submit_search.setAttribute("onclick", `create_images_tag()`);
+        submit_search.setAttribute("lang-key", "search");
+        submit_search.classList.add("search-btn");
+        document.body.appendChild(submit_search);
+
+        let search = document.createElement("input");
+        search.id="search_input";
+        search.classList.add("search");
+        document.body.appendChild(search);
+    }
+
+    
+    function create_images_tag(){
+        let submit_search = document.body.querySelector('#search_input');
+        $.ajax({
+            url: '/content/public',
+            method: 'get',
+            dataType: 'html',
+            data: {tag: submit_search.value},
+            success: function(responce){
+                responce = JSON.parse(responce)
+                create_images(responce['rows']);
+            }
+        });
+    }
+    
+    // создание плитки изображений
+    function create_images(data) {
+        let container_find = document.querySelector('#find_link');
+        if (container_find == null) {
+            container_find = document.createElement("div");
+            container_find.id="find_link"
+            container_find.classList.add('container-find')
+            document.body.appendChild(container_find);
+        }
+        data.forEach(item => {
+            
+            let div = document.createElement('div');
+            div.classList.add('active-image');
+            container_find.appendChild(div);
+
+            let image = document.createElement('img');
+            image.id=`img${item}`
+            image.classList.add('in-image');
+            image.setAttribute("onclick", `save_img(${image.id})`);
+            image.setAttribute("src", `${item}`);
+            div.appendChild(image);
+            
+            let like_div = document.createElement('div');
+            like_div.classList.add('hide_sl');
+            like_div.innerHTML = `<i class="fa-regular fa-heart"></i>123`
+            div.appendChild(like_div);  
+            
+            let save_div = document.createElement('div');
+            save_div.classList.add('hide_load');
+            save_div.innerHTML = `<i class="fas fa-share"></i>`
+            div.appendChild(save_div);
+        })
+        reload_lang();
+    }
+
+    // костыль перезагрузки языка
+    function reload_lang(){
+        let selectElement = document.querySelector('#localization-switcher')
+        const event = new Event('change');
+        selectElement.dispatchEvent(event);
+    }
+
+    // Обработчик добавления конвертора файлов
+    function drop_link_create() {
+        let container_drop = document.createElement("div");
+        container_drop.id="drop_field"
+        container_drop.classList.add('container-drop')
+        document.body.appendChild(container_drop);
+
+        let drop_text = document.createElement("div");
+        drop_text.classList.add('drop-text');
+        container_drop.appendChild(drop_text);
+
+        let h_text = document.createElement("h1");
+        h_text.setAttribute("lang-key", "drop_zone");
+        drop_text.appendChild(h_text)
+
+        let drop_zone = document.createElement("div");
+        drop_zone.classList.add('add-file');
+        drop_zone.classList.add('noise');
+        drop_zone.id='drop_zone';
+        drop_zone.setAttribute("ondrop", "dropHandler(event)");
+        drop_zone.setAttribute("ondragover", "dragOverHandler(event)");
+        container_drop.appendChild(drop_zone);
+    }
+
+    // Обработик положения меню
+    const menu_switchers = [...document.querySelectorAll('.menu')]
+    menu_switchers.forEach(item => {
+    item.addEventListener('click', function() { 
+        menu_switchers.forEach(item => item.classList.remove('active'))
+		this.classList.add('active')
+	})
+});
+
+</script>

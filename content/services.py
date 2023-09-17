@@ -3,15 +3,20 @@ from users.models import User
 from database_handler import (database, db_content,
                               db_useres_content, db_tags,
                               db_content_tags)
-from content.models import ContentIn
+# from content.models import ContentIn
 from datetime import datetime
 from minio_class import Minio_client
-
-async def post_content(current_user: User, content: ContentIn, tag):
-    query = db_content.select().where(db_content.c.link_to_storage == content.link_to_storage)
-    res = await database.fetch_one(query)
-    if res == None:
-        ins = dict(content)
+import aiofiles,os,random
+async def post_content(current_user: User, filename: str, tag, file):
+    # query = db_content.select().where(db_content.c.link_to_storage == content.link_to_storage)
+    # res = await database.fetch_one(query)
+    # print(f)
+    #     link_to_storage: str
+#     is_private: bool | None = False
+    m = Minio_client('config.ini')
+    name = f"{current_user.username}_{filename}"
+    if not m.object_exists(name):
+        ins = {"link_to_storage":name,"is_private":False}
         ins["created_at"] = datetime.now()
         ins['counter'] = 1
         ins['updated_at'] = datetime.now()
@@ -36,7 +41,11 @@ async def post_content(current_user: User, content: ContentIn, tag):
                 query = db_content_tags.insert().values(tags_id=tag_res.id,
                                                         content_id=last_record_id)
                 await database.execute(query)
-        
+            async with aiofiles.open(name, 'wb') as out_file:
+                while content := await file.read(1024):  # async read chunk
+                    await out_file.write(content)  # async write chunk
+            m.put_file(name,name)
+            os.remove(name)
         return {**ins, "id": last_record_id}
     else:
         query = db_useres_content.select().where(
@@ -121,18 +130,19 @@ async def get_content(skip, limit, order_by,
     #         sql_and = 'AND'
     #     sql_private = 'is_private = false'
     #     sql_where = "WHERE"
-    query = (f"SELECT * FROM content JOIN content_tags ON content.id = content_id "
-             "JOIN tags ON content_tags.tags_id = tags.id "
-             f"{sql_where} {sql_private} {sql_and} {sql_filter_tag} order by "
-             f"{order_by} {order_by_desc} OFFSET {skip} LIMIT {limit}")
-    result = await database.fetch_all(query)
     m = Minio_client('config.ini')
     return_list = []
-    for i in range(1,9):
-        # return_list = [m.get_url(f'cat{i}.gif') for i in range(1,9)]
-    # for res in result:
-        
-        return_list.append(m.get_url(f'cat{i}.gif'))
+    if filter_tag:
+        query = (f"SELECT * FROM content JOIN content_tags ON content.id = content_id "
+                "JOIN tags ON content_tags.tags_id = tags.id "
+                f"{sql_where} {sql_private} {sql_and} {sql_filter_tag} order by "
+                f"{order_by} {order_by_desc} OFFSET {skip} LIMIT {limit}")
+        result = await database.fetch_all(query)
+        result = [list(i.values())[1] for i in result]
+    else:
+        result = [i.object_name for i in m.get_all_objects()]
+    for i in range(10):
+        return_list.append(m.get_url(random.choice(result)))
 
     return return_list
 
