@@ -26,7 +26,6 @@ tags to explore:
 # Stack:
 - Fast, secure, scalable S3 storage Minio
 - High performance async web open API (FAST API)
--   
 
 
 
