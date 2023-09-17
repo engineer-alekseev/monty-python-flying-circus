@@ -5,12 +5,27 @@ repository for implementation school 21 hackaton task
 Сервис для хранения мемов в формате GIF с открытым API, 
 специально оптимизированное для быстрого поиска и отправки
 
-WEB APP: www.bytecode.su
-API documentation: www.bytecode.su/docs
+# WEB APP: www.bytecode.su
+how to test: 
+user: admin
+pass: admin
+tags to explore:
+ -- angry
+ -- cute
+ -- dancing
+ -- funny
+ -- happy
+ -- sad
+ -- sleep
+ -- working
+ -- no cats
+ 
+# API documentation: www.bytecode.su/docs
 
-Stack:
+# Stack:
 - Fast, secure, scalable S3 storage Minio
-- High performance async web open API  
+- High performance async web open API (FAST API)
+-   
 
 
 
